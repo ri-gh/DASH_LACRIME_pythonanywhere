@@ -7,7 +7,7 @@ import datetime
 import dash_bootstrap_components as dbc
 
 
-df = pd.read_csv("/home/your_user_name_pythonanywhere/mysite/data/LA_Crime_clean.csv") #csv file path from another directory on pythonanywhere
+df = pd.read_csv("/home/your_user_name_pythonanywhere/mysite/data/LA_Crime_clean.csv") #csv file path from another directory named 'data'on pythonanywhere
 
 logo ='https://i.pinimg.com/736x/ad/39/d6/ad39d60bf6bc0a0b0dd89466fbb1c6b1--orange-los-angeles.jpg' #LA logo
 logo_dash = 'https://avatars0.githubusercontent.com/u/5997976?s=400&v=4' #DASH logo
