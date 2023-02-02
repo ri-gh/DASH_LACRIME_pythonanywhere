@@ -26,15 +26,6 @@ df_default = df_default[df_default['AREA NAME'] == 'Hollywood'].reset_index(drop
 start_hour = 2 #to have the first hour selected from the range slider
 end_hour = 8   #to have the last hour selected from the range slider
 df_default = df_default[(df_default['hour'] >=  start_hour) & (df_default['hour'] <= end_hour)].reset_index(drop=True)
-    #to sort the df by day name in order, we give each day his ranking number ,we apply a lambda and add a new column
-df_default['day_ranking'] = df_default['day_name'].apply(lambda x: 0 if x == 'Monday'
-                                                            else 1 if x == 'Tuesday'
-                                                            else 2 if x == 'Wednesday'
-                                                            else 3 if x == 'Thursday'
-                                                            else 4 if x == 'Friday'
-                                                            else 5 if x =='Saturday'
-                                                            else 6 if x =='Sunday'
-                                                            else 'nothing')
 df_default = df_default.reset_index(drop=True)
 
 def default_pie():
@@ -324,17 +315,6 @@ def pie(month_choose, year_choose,area,hour_choice):
     fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
     fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
 
-    #to sort the df by day name in order, we give each day his ranking number ,we apply a lambda and add a new column
-    df_area['day_ranking'] = df_area['day_name'].apply(lambda x: 0 if x == 'Monday'
-                                                                else 1 if x == 'Tuesday'
-                                                                else 2 if x == 'Wednesday'
-                                                                else 3 if x == 'Thursday'
-                                                                else 4 if x == 'Friday'
-                                                                else 5 if x =='Saturday'
-                                                                else 6 if x =='Sunday'
-                                                                else 'nothing')
-
-    df_area = df_area.reset_index(drop=True)
     df_line_day_name = df_area.groupby(['AREA NAME','month_name','year','day_name','day_ranking'])['Crm Cd Desc'].count().reset_index()
     df_line_day_name = pd.DataFrame(df_line_day_name)
     df_line_day_name = df_line_day_name.sort_values('day_ranking').reset_index(drop=True)
