@@ -85,6 +85,16 @@ df['hour'] = df['TIME OCC'].dt.hour
 
 df['TIME OCC'] = df['TIME OCC'].astype(str).str.split(' ' , expand=True)[1]
 
+#to sort the df by day name in order, we give each day his ranking number ,we apply a lambda and add a new column
+df['day_ranking'] = df['day_name'].apply(lambda x: 0 if x == 'Monday'  
+                                                            else 1 if x == 'Tuesday'
+                                                            else 2 if x == 'Wednesday'
+                                                            else 3 if x == 'Thursday'
+                                                            else 4 if x == 'Friday'
+                                                            else 5 if x =='Saturday'
+                                                            else 6 if x =='Sunday'
+                                                            else 'nothing')
+
 
 #we reduce the df to 100 000 to fit the pythonanywhere free tier storage restrictions 
 df= df.sample(100000)
