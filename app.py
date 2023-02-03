@@ -315,24 +315,47 @@ def pie(month_choose, year_choose,area,hour_choice):
             df_pie_area = df_area.groupby('Type of crime')['Crm Cd Desc'].count()
             df_pie_area = pd.DataFrame(df_pie_area)
             df_pie_area = df_pie_area.reset_index()
-            fig_pie = px.pie(df_pie_area,values='Crm Cd Desc',names='Type of crime',
-            title='Crime type repartition for selected area in {}'.format(year_choose))
-            fig_pie.update_traces(textposition='inside', textinfo='percent+label',#to put the label inside the pie
-            hole=.4,
-            hovertemplate="<br>".join(["Year: {}".format(year_choose),
-                "Hours range: between {}h and {}h".format(start_hour,end_hour),
-                "Type of crime: %{label}",
-                "Number: %{value}"] ))
-            fig_pie.update_layout(legend_title_text= "Type of crime:",
-            template='plotly_dark',
-            title_font_color="rgb(159, 241, 253)",
-            paper_bgcolor='black', #to change the background color of the figure
-            plot_bgcolor='black')#to change the background colour of the graph
-            fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
-            fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
-            fig_pie.add_annotation(text= 'Between {}h & {}h in {}'.format(start_hour,end_hour,year_choose),
-            showarrow=False, y = -0.2,
-            font=dict(color="rgb(159, 241, 253)",size = 15))
+
+            if len(area) == 1:
+
+                fig_pie = px.pie(df_pie_area,values='Crm Cd Desc',names='Type of crime',
+                title='Crime type repartition for {} in {}'.format(','.join(area),year_choose))
+                fig_pie.update_traces(textposition='inside', textinfo='percent+label',#to put the label inside the pie
+                hole=.4,
+                hovertemplate="<br>".join(["Year: {}".format(year_choose),
+                    "Hours range: between {}h and {}h".format(start_hour,end_hour),
+                    "Type of crime: %{label}",
+                    "Number: %{value}"] ))
+                fig_pie.update_layout(legend_title_text= "Type of crime:",
+                template='plotly_dark',
+                title_font_color="rgb(159, 241, 253)",
+                paper_bgcolor='black', #to change the background color of the figure
+                plot_bgcolor='black')#to change the background colour of the graph
+                fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.add_annotation(text= 'Between {}h & {}h'.format(start_hour,end_hour),
+                showarrow=False, x= 0.5,y = -0.2,
+                font=dict(color="rgb(159, 241, 253)",size = 15))
+
+            else:
+                fig_pie = px.pie(df_pie_area,values='Crm Cd Desc',names='Type of crime',
+                title='Crime type repartition for selected area in {}'.format(year_choose))
+                fig_pie.update_traces(textposition='inside', textinfo='percent+label',#to put the label inside the pie
+                hole=.4,
+                hovertemplate="<br>".join(["Year: {}".format(year_choose),
+                    "Hours range: between {}h and {}h".format(start_hour,end_hour),
+                    "Type of crime: %{label}",
+                    "Number: %{value}"] ))
+                fig_pie.update_layout(legend_title_text= "Type of crime:",
+                template='plotly_dark',
+                title_font_color="rgb(159, 241, 253)",
+                paper_bgcolor='black', #to change the background color of the figure
+                plot_bgcolor='black')#to change the background colour of the graph
+                fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.add_annotation(text= 'Between {}h & {}h'.format(start_hour,end_hour),
+                showarrow=False, x= 0.5, y = -0.2,
+                font=dict(color="rgb(159, 241, 253)",size = 15))
 
             df_line_day_name = df_area.groupby(['AREA NAME','year','day_name','day_ranking'])['Crm Cd Desc'].count().reset_index()
             df_line_day_name = pd.DataFrame(df_line_day_name)
@@ -377,8 +400,9 @@ def pie(month_choose, year_choose,area,hour_choice):
             "Total crime number: %{customdata[2]}"
                 ])
             )
-            fig_line.update_xaxes(color="rgb(159, 241, 253)")#change color of xaxes labels
+            fig_line.update_xaxes(color="rgb(159, 241, 253)")#change color of xaxes labelsFebruary
             fig_line.update_yaxes(color="white") #change color of yaxes labels
+
 
             #to sort the df by month name in order, we give each month his ranking number ,we apply a lambda and add a new column
             df_area['month_ranking'] = df_area['month_name'].apply(lambda x: 0 if x == 'January'  
@@ -394,7 +418,7 @@ def pie(month_choose, year_choose,area,hour_choice):
                                                             else 10 if x == 'November'
                                                             else 11 if x =='December'
                                                             else 'nothing')
-                                                            
+
             df_fig_bar = df_area.groupby(['AREA NAME','month_name','month_ranking'])['Crm Cd Desc'].count().reset_index()
             df_fig_bar = pd.DataFrame(df_fig_bar)
             df_fig_bar = df_fig_bar.sort_values('month_ranking').reset_index(drop=True)
@@ -417,32 +441,54 @@ def pie(month_choose, year_choose,area,hour_choice):
 
             return fig_pie,fig_day_name_area,fig ,fig_line
 
-            
         else:
             df_area = df_area[df_area['month_name'] == month_choose].reset_index(drop=True)
 
             df_pie_area = df_area.groupby('Type of crime')['Crm Cd Desc'].count()
             df_pie_area = pd.DataFrame(df_pie_area)
             df_pie_area = df_pie_area.reset_index()
-            fig_pie = px.pie(df_pie_area,values='Crm Cd Desc',names='Type of crime',
-            title='Crime type repartition for selected area')
-            fig_pie.update_traces(textposition='inside', textinfo='percent+label',#to put the label inside the pie
-            hole=.4,
-            hovertemplate="<br>".join(["Period: {} {}".format(month_choose,year_choose),
-                "Hours range: between {}h and {}h".format(start_hour,end_hour),
-                "Type of crime: %{label}",
-                "Number: %{value}"] ))
-            fig_pie.update_layout(legend_title_text= "Type of crime:",
-            template='plotly_dark',
-            title_font_color="rgb(159, 241, 253)",
-            paper_bgcolor='black', #to change the background color of the figure
-            plot_bgcolor='black')#to change the background colour of the graph
-            fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
-            fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
-            fig_pie.add_annotation(text= 'Between {}h & {}h in {} {}'.format(start_hour,end_hour,month_choose,year_choose),
-            showarrow=False, y = -0.2,
-            font=dict(color="rgb(159, 241, 253)",size = 15))
 
+            if len(area) == 1:
+                fig_pie = px.pie(df_pie_area,values='Crm Cd Desc',names='Type of crime',
+                title='Crime type repartition for {} in {}'.format(','.join(area),year_choose))
+                fig_pie.update_traces(textposition='inside', textinfo='percent+label',#to put the label inside the pie
+                hole=.4,
+                hovertemplate="<br>".join(["Year: {}".format(year_choose),
+                    "Hours range: between {}h and {}h".format(start_hour,end_hour),
+                    "Type of crime: %{label}",
+                    "Number: %{value}"] ))
+                fig_pie.update_layout(legend_title_text= "Type of crime:",
+                template='plotly_dark',
+                title_font_color="rgb(159, 241, 253)",
+                paper_bgcolor='black', #to change the background color of the figure
+                plot_bgcolor='black')#to change the background colour of the graph
+                fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.add_annotation(text= 'Between {}h & {}h'.format(start_hour,end_hour),
+                showarrow=False, x= 0.5,y = -0.2,
+                font=dict(color="rgb(159, 241, 253)",size = 15))
+            else:
+                df_pie_area = df_area.groupby('Type of crime')['Crm Cd Desc'].count()
+                df_pie_area = pd.DataFrame(df_pie_area)
+                df_pie_area = df_pie_area.reset_index()
+                fig_pie = px.pie(df_pie_area,values='Crm Cd Desc',names='Type of crime',
+                title='Crime type repartition for selected area')
+                fig_pie.update_traces(textposition='inside', textinfo='percent+label',#to put the label inside the pie
+                hole=.4,
+                hovertemplate="<br>".join(["Period: {} {}".format(month_choose,year_choose),
+                    "Hours range: between {}h and {}h".format(start_hour,end_hour),
+                    "Type of crime: %{label}",
+                    "Number: %{value}"] ))
+                fig_pie.update_layout(legend_title_text= "Type of crime:",
+                template='plotly_dark',
+                title_font_color="rgb(159, 241, 253)",
+                paper_bgcolor='black', #to change the background color of the figure
+                plot_bgcolor='black')#to change the background colour of the graph
+                fig_pie.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig_pie.add_annotation(text= 'Between {}h & {}h in {} {}'.format(start_hour,end_hour,month_choose,year_choose),
+                showarrow=False, y = -0.2,
+                font=dict(color="rgb(159, 241, 253)",size = 15))
             df_line_day_name = df_area.groupby(['AREA NAME','month_name','year','day_name','day_ranking'])['Crm Cd Desc'].count().reset_index()
             df_line_day_name = pd.DataFrame(df_line_day_name)
             df_line_day_name = df_line_day_name.sort_values('day_ranking').reset_index(drop=True)
